@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0B1F3A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Calculator Profit">
+  <meta name="description" content="Calculator de profit și ROI pentru ApexCart ECOM. Completează prețurile și vezi imediat dacă oferta e bună.">
+  <title>Calculator Profit – ApexCart ECOM</title>
+  <style>
+    :root {
+      --navy: #0B1F3A;
+      --navy-2: #163056;
+      --accent: #2B6CB0;
+      --accent-soft: #E8F0F8;
+      --bg: #E8EDF4;
+      --card: #FFFFFF;
+      --text: #0F172A;
+      --muted: #5A6B7D;
+      --line: #D7DEE8;
+      --green: #0F7B4A;
+      --green-bg: #E7F6EE;
+      --red: #B42318;
+      --red-bg: #FDECEC;
+      --shadow: 0 10px 28px rgba(11, 31, 58, 0.08);
+      --radius: 16px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body { padding-bottom: calc(24px + var(--safe-bottom)); }
+
+    .header {
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-2) 100%);
+      color: #fff;
+      padding: calc(28px + var(--safe-top)) 20px 32px;
+    }
+
+    .header-inner { max-width: 520px; margin: 0 auto; }
+
+    .brand {
+      display: inline-block;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #FFF8E8;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #7C3AED 0%, #2563EB 48%, #0EA5A4 100%);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 8px 22px rgba(37, 99, 235, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      text-shadow: 0 1px 0 rgba(11, 31, 58, 0.25);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .header p {
+      margin-top: 10px;
+      color: #C5D2E3;
+      font-size: 15px;
+      max-width: 36em;
+    }
+
+    main {
+      max-width: 520px;
+      margin: -18px auto 0;
+      padding: 0 16px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 18px 18px;
+    }
+
+    h2 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 14px;
+    }
+
+    .steps { list-style: none; display: grid; gap: 12px; }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .steps .num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .steps strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 650;
+      color: var(--text);
+    }
+
+    .steps span {
+      display: block;
+      margin-top: 2px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .vat-block { margin-bottom: 16px; }
+
+    .vat-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 650;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .vat-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      background: #EEF2F7;
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .vat-options button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--navy);
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 0 12px;
+    }
+
+    .vat-options button.is-active {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .fields { display: grid; gap: 14px; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 650;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .field-hint {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .mode-only.is-hidden { display: none; }
+
+    input[type="text"] {
+      width: 100%;
+      height: 54px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 18px;
+      font-weight: 550;
+      color: var(--text);
+      background: #F8FAFC;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input[type="text"]::placeholder { color: #94A3B8; font-weight: 450; }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(43, 108, 176, 0.18);
+    }
+
+    .hint { margin-top: 12px; font-size: 13px; color: var(--muted); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .actions button, .btn-primary, .btn-secondary {
+      flex: 1 1 140px;
+      min-height: 48px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 650;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 0 16px;
+    }
+
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-primary:hover, .btn-primary:focus-visible { background: #071525; }
+    .btn-secondary { background: #fff; color: var(--navy); border: 1.5px solid var(--line); }
+    .btn-secondary:hover, .btn-secondary:focus-visible { background: var(--accent-soft); }
+
+    .fixed-note { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+
+    .eur-line {
+      background: var(--accent-soft);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: var(--navy);
+      font-weight: 650;
+    }
+
+    .eur-line span {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .props {
+      display: grid;
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .prop {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 14px;
+      font-size: 15px;
+      border-top: 1px solid var(--line);
+    }
+
+    .prop:first-child { border-top: 0; }
+    .prop span { color: var(--muted); }
+    .prop strong { font-weight: 650; color: var(--text); text-align: right; }
+
+    .text-link {
+      display: none;
+      margin-top: 8px;
+      background: none;
+      border: 0;
+      padding: 0;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .text-link.is-visible { display: inline-block; }
+
+    .settings-group {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 6px 0 2px;
+    }
+
+    #rezultat { display: none; }
+    #rezultat.is-visible { display: block; }
+
+    .lead { font-size: 14px; color: var(--muted); margin-bottom: 14px; }
+
+    .metrics { display: grid; grid-template-columns: 1fr; gap: 8px; }
+
+    @media (min-width: 420px) {
+      .metrics { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .metric {
+      background: var(--accent-soft);
+      border-radius: 12px;
+      padding: 12px 12px 11px;
+    }
+
+    .metric .value {
+      font-size: 20px;
+      font-weight: 750;
+      letter-spacing: -0.03em;
+      color: var(--navy);
+    }
+
+    .metric .label {
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 550;
+    }
+
+    .verdict { margin: 14px 0 16px; border-radius: 12px; padding: 14px 14px 13px; }
+    .verdict.ok { background: var(--green-bg); color: var(--green); }
+    .verdict.bad { background: var(--red-bg); color: var(--red); }
+    .verdict .title { font-size: 16px; font-weight: 750; margin-bottom: 4px; }
+    .verdict p { font-size: 14px; line-height: 1.45; color: inherit; }
+
+    .offers { display: grid; gap: 10px; }
+
+    .offer {
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      padding: 13px 14px 12px;
+    }
+
+    .offer.ok { border-color: var(--green); }
+    .offer.bad { border-color: var(--red); }
+
+    .offer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .offer-name { font-weight: 750; color: var(--navy); font-size: 15px; }
+    .offer-price { font-size: 14px; color: var(--muted); font-weight: 550; }
+    .offer-profit { margin-top: 4px; font-size: 18px; font-weight: 750; letter-spacing: -0.02em; }
+    .offer-meta { margin-top: 2px; font-size: 13px; color: var(--muted); }
+
+    .badge {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.02em;
+      padding: 4px 9px;
+      border-radius: 999px;
+    }
+
+    .offer.ok .badge { background: var(--green-bg); color: var(--green); }
+    .offer.bad .badge { background: var(--red-bg); color: var(--red); }
+
+    .thresholds { margin-top: 12px; font-size: 12px; color: var(--muted); }
+
+    footer {
+      max-width: 520px;
+      margin: 20px auto 0;
+      padding: 0 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #7A8796;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">ApexCart ECOM</div>
+      <h1>Calculator Profit</h1>
+      <p>Completează prețul de import și prețurile de vânzare. Calculatorul îți arată imediat dacă prețul e bun: verde înseamnă că e în regulă, roșu că trebuie mărit.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="cum-se-foloseste">
+      <h2 id="cum-se-foloseste">Cum se folosește</h2>
+      <ol class="steps">
+        <li>
+          <div class="num">1</div>
+          <div>
+            <strong>Alege TVA-ul și completează prețurile</strong>
+            <span>Spune dacă ești plătitor de TVA, apoi scrie prețul de import și prețurile de vânzare pentru 1, 2 și 3 bucăți. Folosește doar numere, în lei.</span>
+          </div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div>
+            <strong>Citește rezultatul</strong>
+            <span>Verde și Se încadrează înseamnă că oferta e bună. Roșu și Nu se încadrează înseamnă că trebuie să mărești prețul.</span>
+          </div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div>
+            <strong>Ajustează prețurile</strong>
+            <span>Schimbă prețurile de vânzare până când ofertele apar cu verde.</span>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="card" aria-labelledby="completeaza">
+      <h2 id="completeaza">Completează prețurile</h2>
+      <div class="vat-block">
+        <span class="vat-title" id="vat-label">Plătitor TVA</span>
+        <div class="vat-options" role="radiogroup" aria-labelledby="vat-label">
+          <button type="button" role="radio" id="vatDa" aria-checked="false" data-vat="da">Da</button>
+          <button type="button" role="radio" id="vatNu" aria-checked="true" data-vat="nu" class="is-active">Nu</button>
+        </div>
+      </div>
+      <div class="fields">
+        <div>
+          <label for="importPrice" id="labelImport">Preț import cu TVA (lei)</label>
+          <input id="importPrice" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" placeholder="ex. 9" aria-describedby="fields-hint">
+        </div>
+        <div>
+          <label for="price1">Preț vânzare 1 bucată, cu TVA (lei)</label>
+          <input id="price1" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" placeholder="ex. 99">
+        </div>
+        <div>
+          <label for="price2">Preț vânzare 2 bucăți, cu TVA (lei)</label>
+          <input id="price2" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" placeholder="ex. 129">
+        </div>
+        <div>
+          <label for="price3">Preț vânzare 3 bucăți, cu TVA (lei)</label>
+          <input id="price3" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="ex. 159">
+        </div>
+      </div>
+      <p class="hint" id="fields-hint">Dacă ești plătitor de TVA, scrie prețul de import fără TVA. Dacă nu ești, scrie-l cu TVA. Rezultatele apar imediat după ce completezi prețul de import și prețul la 1 bucată. Poți scrie virgulă sau punct, de exemplu 17,50.</p>
+      <div class="actions">
+        <button type="button" class="btn-primary" id="btnExample">Vezi exemplul</button>
+        <button type="button" class="btn-secondary" id="btnClear">Șterge valorile</button>
+      </div>
+    </section>
+
+    <section class="card" id="rezultat" aria-live="polite" aria-labelledby="rezultat-title">
+      <h2 id="rezultat-title">Rezultat</h2>
+      <p class="lead" id="rezultat-lead">ROI-ul se calculează doar pentru o bucată. La 2 și 3 bucăți vezi profitul ofertei și dacă prețul e potrivit.</p>
+      <div class="metrics" id="metrics"></div>
+      <div class="verdict" id="verdict"></div>
+      <div class="offers" id="offers"></div>
+    </section>
+
+    <section class="card" aria-labelledby="valori-fixe">
+      <h2 id="valori-fixe">Valori deja incluse în calcul</h2>
+      <p class="fixed-note">Aceste valori sunt luate în calcul automat. Dacă nu ești plătitor de TVA, împachetarea este 1 euro plus TVA. Dacă ești plătitor de TVA, este 1 euro, fără TVA.</p>
+      <div class="eur-line" id="eurLine">Curs EUR azi: se încarcă…</div>
+      <div class="props" id="fixedProps"></div>
+    </section>
+  </main>
+
+  <footer>
+    Calculator Profit by ApexCart ECOM
+  </footer>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = "twb-eur-ron";
+      var FALLBACK_RATE = 5.3428;
+      var FALLBACK_SOURCE = "curs BNR (rezervă)";
+      var FALLBACK_DATE = "2026-11-25";
+
+      var DEFAULTS = {
+        retur: 20,
+        transportCuTva: 17.5,
+        transportFaraTva: 14.3,
+        roas: 3.5,
+        tvaPct: 21,
+      };
+
+      var THRESHOLDS = {
+        nu: { th1: 10, th2: 20, th3: 30 },
+        da: { th1: 10, th2: 24, th3: 25 }
+      };
+      var TVA_ADS = 1.16;
+
+      var vatPayer = false;
+      var eurRate = {
+        rate: FALLBACK_RATE,
+        source: FALLBACK_SOURCE,
+        date: FALLBACK_DATE,
+        kind: "fallback"
+      };
+
+
+      function vatMultiplier(tvaPct) {
+        var p = tvaPct == null ? DEFAULTS.tvaPct : tvaPct;
+        return 1 + p / 100;
+      }
+
+      function autoPacking(isVat, tvaPct) {
+        if (isVat) return eurRate.rate;
+        return eurRate.rate * vatMultiplier(tvaPct);
+      }
+
+      function parseLei(s) {
+        var t = String(s).trim().replace(/\s/g, "").replace(",", ".");
+        if (t === "") return null;
+        var n = Number(t);
+        if (!isFinite(n) || n < 0) return null;
+        return n;
+      }
+
+      function formatLei(n) {
+        var fixed = (Math.round(n * 100) / 100).toFixed(2);
+        var parts = fixed.split(".");
+        var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        return intPart + "," + parts[1] + " lei";
+      }
+
+      function formatPct(n) {
+        var fixed = (Math.round(n * 100) / 100).toFixed(2);
+        var parts = fixed.split(".");
+        var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        return intPart + "," + parts[1] + "%";
+      }
+
+      function formatRate(n) {
+        var fixed = (Math.round(n * 10000) / 10000).toFixed(4);
+        return fixed.replace(".", ",");
+      }
+
+      function formatNum(n, decimals) {
+        var d = decimals == null ? 2 : decimals;
+        var fixed = (Math.round(n * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d);
+        return fixed.replace(".", ",");
+      }
+
+      function formatDateRo(value) {
+        var d = new Date(value);
+        if (isNaN(d.getTime())) return String(value);
+        var dd = String(d.getDate()).padStart(2, "0");
+        var mm = String(d.getMonth() + 1).padStart(2, "0");
+        return dd + "." + mm + "." + d.getFullYear();
+      }
+
+      function joinRo(items) {
+        if (items.length === 1) return items[0];
+        if (items.length === 2) return items[0] + " și " + items[1];
+        return items.slice(0, -1).join(", ") + " și " + items[items.length - 1];
+      }
+
+      function defaultSettings() {
+        return {
+          retur: DEFAULTS.retur,
+          transportCuTva: DEFAULTS.transportCuTva,
+          transportFaraTva: DEFAULTS.transportFaraTva,
+          packing: autoPacking(vatPayer, DEFAULTS.tvaPct),
+          roas: DEFAULTS.roas,
+          tvaPct: DEFAULTS.tvaPct
+        };
+      }
+
+      function currentSettings() {
+        return defaultSettings();
+      }
+
+      function mergeOverride(base, override) {
+        var s = {};
+        var k;
+        for (k in base) s[k] = base[k];
+        if (typeof override === "number") {
+          s.packing = override;
+        } else if (override && typeof override === "object") {
+          for (k in override) {
+            if (Object.prototype.hasOwnProperty.call(override, k) && override[k] != null) {
+              s[k] = override[k];
+            }
+          }
+        }
+        return s;
+      }
+
+      function calculate(isVat, importPrice, price1, price2, price3, override) {
+        var s = mergeOverride(defaultSettings(), override);
+        var explicitPack = typeof override === "number" || (override && typeof override === "object" && override.packing != null);
+        if (!explicitPack) s.packing = autoPacking(isVat, s.tvaPct);
+        var th = isVat ? THRESHOLDS.da : THRESHOLDS.nu;
+        var C = parseLei(importPrice);
+        var P1 = parseLei(price1);
+        var E = s.packing;
+        var R = s.retur;
+        var ROAS = s.roas;
+        if (C === null || C === 0 || P1 === null || E === null || E < 0 || !ROAS) return null;
+
+        var result;
+        if (isVat) {
+          var T = s.transportFaraTva;
+          var vatDiv = 1 + s.tvaPct / 100;
+          if (!vatDiv) return null;
+          var ads = P1 / ROAS;
+          var roiRatio = (((P1 - (P1 * R) / 100) / vatDiv) - (T + E) - ads - C) / C;
+          var profit1 = roiRatio * C;
+          var pct1 = P1 === 0 ? 0 : (profit1 / P1) * 100;
+          result = {
+            vat: true,
+            roi: roiRatio * 100,
+            profit1: profit1,
+            ads1: ads,
+            pct1: pct1,
+            ok1: pct1 >= th.th1,
+            p1: P1,
+            p1Net: P1 / vatDiv,
+            packing: E,
+            shipping: T,
+            th1: th.th1,
+            th2: th.th2,
+            th3: th.th3,
+            profit2: null,
+            ads2: null,
+            pct2: null,
+            ok2: null,
+            profitPer2: null,
+            p2: null,
+            p2Net: null,
+            profit3: null,
+            ads3: null,
+            pct3: null,
+            ok3: null,
+            profitPer3: null,
+            p3: null,
+            p3Net: null
+          };
+          var P2 = parseLei(price2);
+          if (P2 !== null) {
+            result.p2 = P2;
+            result.p2Net = P2 / vatDiv;
+            result.profit2 = ((P2 * (1 - R / 100)) / vatDiv) - (C * 2) - E - T - ads;
+            result.ads2 = ads;
+            result.pct2 = P2 === 0 ? 0 : (result.profit2 / P2) * 100;
+            result.ok2 = result.pct2 >= th.th2;
+            result.profitPer2 = result.profit2 / 2;
+          }
+          var P3 = parseLei(price3);
+          if (P3 !== null) {
+            result.p3 = P3;
+            result.p3Net = P3 / vatDiv;
+            result.profit3 = ((P3 - (P3 * R) / 100) / vatDiv) - (C * 3) - E - T - ads;
+            result.ads3 = ads;
+            result.pct3 = P3 === 0 ? 0 : (result.profit3 / P3) * 100;
+            result.ok3 = result.pct3 >= th.th3;
+            result.profitPer3 = result.profit3 / 3;
+          }
+        } else {
+          var T0 = s.transportCuTva;
+          var ads1 = (P1 / ROAS) * TVA_ADS;
+          var roi = (((P1 - (P1 * R) / 100) - (T0 + E) - ads1 - C) / C) * 100;
+          var profit1b = (roi * C) / 100;
+          var pct1b = P1 === 0 ? 0 : (profit1b / P1) * 100;
+          result = {
+            vat: false,
+            roi: roi,
+            profit1: profit1b,
+            ads1: ads1,
+            pct1: pct1b,
+            ok1: pct1b >= th.th1,
+            p1: P1,
+            p1Net: null,
+            packing: E,
+            shipping: T0,
+            th1: th.th1,
+            th2: th.th2,
+            th3: th.th3,
+            profit2: null,
+            ads2: null,
+            pct2: null,
+            ok2: null,
+            profitPer2: null,
+            p2: null,
+            p2Net: null,
+            profit3: null,
+            ads3: null,
+            pct3: null,
+            ok3: null,
+            profitPer3: null,
+            p3: null,
+            p3Net: null
+          };
+          var P2b = parseLei(price2);
+          if (P2b !== null) {
+            result.p2 = P2b;
+            result.profit2 = P2b - P1 - C + profit1b;
+            result.ads2 = (P2b / ROAS) * TVA_ADS;
+            result.pct2 = P2b === 0 ? 0 : (result.profit2 / P2b) * 100;
+            result.ok2 = result.pct2 >= th.th2;
+            result.profitPer2 = result.profit2 / 2;
+          }
+          var P3b = parseLei(price3);
+          if (P3b !== null) {
+            result.p3 = P3b;
+            result.profit3 = P3b - P1 - 2 * C + profit1b;
+            result.ads3 = (P3b / ROAS) * TVA_ADS;
+            result.pct3 = P3b === 0 ? 0 : (result.profit3 / P3b) * 100;
+            result.ok3 = result.pct3 >= th.th3;
+            result.profitPer3 = result.profit3 / 3;
+          }
+        }
+        return result;
+      }
+
+      function allOk(result) {
+        return result.ok1 && (result.ok2 === null || result.ok2) && (result.ok3 === null || result.ok3);
+      }
+
+      function verdictBody(result) {
+        var bad = [];
+        if (!result.ok1) bad.push("1 bucată");
+        if (result.ok2 === false) bad.push("2 bucăți");
+        if (result.ok3 === false) bad.push("3 bucăți");
+        if (bad.length === 0) {
+          return "Profitul se încadrează. Poți folosi aceste prețuri.";
+        }
+        return "Nu se încadrează la " + joinRo(bad) + ". Mărește prețul la aceste oferte.";
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      var elImport = document.getElementById("importPrice");
+      var elP1 = document.getElementById("price1");
+      var elP2 = document.getElementById("price2");
+      var elP3 = document.getElementById("price3");
+      var elLabelImport = document.getElementById("labelImport");
+      var elResult = document.getElementById("rezultat");
+      var elLead = document.getElementById("rezultat-lead");
+      var elMetrics = document.getElementById("metrics");
+      var elVerdict = document.getElementById("verdict");
+      var elOffers = document.getElementById("offers");
+      var elEur = document.getElementById("eurLine");
+      var elProps = document.getElementById("fixedProps");
+      var btnDa = document.getElementById("vatDa");
+      var btnNu = document.getElementById("vatNu");
+
+      function setVat(isVat) {
+        vatPayer = isVat;
+        btnDa.classList.toggle("is-active", isVat);
+        btnNu.classList.toggle("is-active", !isVat);
+        btnDa.setAttribute("aria-checked", isVat ? "true" : "false");
+        btnNu.setAttribute("aria-checked", isVat ? "false" : "true");
+        elLabelImport.textContent = isVat ? "Preț import fără TVA (lei)" : "Preț import cu TVA (lei)";
+        elImport.placeholder = isVat ? "ex. 12" : "ex. 9";
+        elP1.placeholder = isVat ? "ex. 119" : "ex. 99";
+        elP2.placeholder = isVat ? "ex. 199" : "ex. 129";
+        elP3.placeholder = isVat ? "ex. 259" : "ex. 159";
+        renderFixed();
+        render();
+      }
+
+      function sourceLabel(info) {
+        if (info.kind === "live") return info.source;
+        if (info.kind === "cache") return "salvat pe dispozitiv";
+        return info.source;
+      }
+
+      function renderFixed() {
+        var rateText = formatRate(eurRate.rate) + " lei";
+        var when = formatDateRo(eurRate.date);
+        elEur.innerHTML = "Curs EUR azi: " + escapeHtml(rateText) +
+          " <span id=\"eurMeta\">(" + escapeHtml(sourceLabel(eurRate)) + ", " + escapeHtml(when) + ")</span>";
+        var s = defaultSettings();
+        var roasDec = Math.round(s.roas) === s.roas ? 0 : 1;
+        var tvaDec = Math.round(s.tvaPct) === s.tvaPct ? 0 : 2;
+        var rows = [
+          { label: "Rată retur", value: formatNum(s.retur, s.retur % 1 === 0 ? 0 : 2) + "%" },
+          { label: "Transport", value: vatPayer ? formatLei(s.transportFaraTva) + " (fără TVA)" : formatLei(s.transportCuTva) + " (cu TVA)" },
+          { label: "Împachetare", value: vatPayer ? formatLei(autoPacking(true, s.tvaPct)) + " (1 euro, fără TVA)" : formatLei(autoPacking(false, s.tvaPct)) + " (1 euro + TVA)" },
+          { label: "ROAS", value: formatNum(s.roas, roasDec) }
+        ];
+        if (vatPayer) {
+          rows.push({ label: "Cota TVA", value: formatNum(s.tvaPct, tvaDec) + "%" });
+        }
+        elProps.innerHTML = rows.map(function (row) {
+          return '<div class="prop"><span>' + escapeHtml(row.label) + "</span><strong>" + escapeHtml(row.value) + "</strong></div>";
+        }).join("");
+      }
+
+      function render() {
+        var result = calculate(vatPayer, elImport.value, elP1.value, elP2.value, elP3.value);
+        if (!result) {
+          elResult.classList.remove("is-visible");
+          elMetrics.innerHTML = "";
+          elVerdict.innerHTML = "";
+          elOffers.innerHTML = "";
+          return;
+        }
+
+        elResult.classList.add("is-visible");
+        elLead.textContent = vatPayer
+          ? "ROI-ul se calculează pentru o bucată, după scoaterea TVA-ului. La 2 și 3 bucăți vezi profitul ofertei și dacă prețul e potrivit."
+          : "ROI-ul se calculează doar pentru o bucată. La 2 și 3 bucăți vezi profitul ofertei și dacă prețul e potrivit.";
+
+        var adsLabel = vatPayer ? "Buget reclamă (CPA)" : "Buget reclamă 1 bucată";
+        elMetrics.innerHTML =
+          '<div class="metric"><div class="value" id="out-roi">' + escapeHtml(formatPct(result.roi)) + '</div><div class="label">ROI 1 bucată</div></div>' +
+          '<div class="metric"><div class="value" id="out-profit1">' + escapeHtml(formatLei(result.profit1)) + '</div><div class="label">Profit 1 bucată</div></div>' +
+          '<div class="metric"><div class="value" id="out-ads1">' + escapeHtml(formatLei(result.ads1)) + '</div><div class="label">' + escapeHtml(adsLabel) + "</div></div>";
+
+        var ok = allOk(result);
+        elVerdict.className = "verdict " + (ok ? "ok" : "bad");
+        elVerdict.innerHTML =
+          '<div class="title" id="out-verdict-title">' + (ok ? "Se încadrează" : "Nu se încadrează") + "</div>" +
+          '<p id="out-verdict-body">' + escapeHtml(verdictBody(result)) + "</p>";
+
+        var html = "";
+        html += offerHtml("1 buc", result, 1);
+        if (result.p2 !== null) html += offerHtml("2 buc", result, 2);
+        if (result.p3 !== null) html += offerHtml("3 buc", result, 3);
+        elOffers.innerHTML = html;
+      }
+
+      function offerHtml(name, result, n) {
+        var profit = n === 1 ? result.profit1 : n === 2 ? result.profit2 : result.profit3;
+        var pct = n === 1 ? result.pct1 : n === 2 ? result.pct2 : result.pct3;
+        var ads = n === 1 ? result.ads1 : n === 2 ? result.ads2 : result.ads3;
+        var price = n === 1 ? result.p1 : n === 2 ? result.p2 : result.p3;
+        var net = n === 1 ? result.p1Net : n === 2 ? result.p2Net : result.p3Net;
+        var ok = n === 1 ? result.ok1 : n === 2 ? result.ok2 : result.ok3;
+        var perPiece = n === 1 ? null : n === 2 ? result.profitPer2 : result.profitPer3;
+        var meta = escapeHtml(formatPct(pct)) + " din prețul de vânzare";
+        if (net !== null) meta += " · fără TVA " + escapeHtml(formatLei(net));
+        if (perPiece !== null) meta += " · " + escapeHtml(formatLei(perPiece)) + " pe bucată";
+        meta += " · buget reclamă " + escapeHtml(formatLei(ads));
+        return (
+          '<article class="offer ' + (ok ? "ok" : "bad") + '" id="out-offer-' + n + '">' +
+            '<div class="offer-top">' +
+              '<div class="offer-name">' + escapeHtml(name) + "</div>" +
+              '<div class="offer-price">' + escapeHtml(formatLei(price)) + "</div>" +
+            "</div>" +
+            '<div class="offer-profit">' + escapeHtml(formatLei(profit)) + " profit</div>" +
+            '<div class="offer-meta">' + meta + "</div>" +
+            '<div class="badge">' + (ok ? "Se încadrează" : "Nu se încadrează") + "</div>" +
+          "</article>"
+        );
+      }
+
+      function showExample() {
+        if (vatPayer) {
+          elImport.value = "12";
+          elP1.value = "119";
+          elP2.value = "199";
+          elP3.value = "259";
+        } else {
+          elImport.value = "9";
+          elP1.value = "99";
+          elP2.value = "129";
+          elP3.value = "159";
+        }
+        render();
+        elResult.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function clearAll() {
+        elImport.value = "";
+        elP1.value = "";
+        elP2.value = "";
+        elP3.value = "";
+        render();
+        elImport.focus();
+      }
+
+      function applyRate(info) {
+        eurRate = info;
+        renderFixed();
+        render();
+      }
+
+      function readCache() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          var data = JSON.parse(raw);
+          if (!data || !isFinite(data.rate) || data.rate <= 0) return null;
+          return {
+            rate: Number(data.rate),
+            source: data.source || "salvat pe dispozitiv",
+            date: data.date || FALLBACK_DATE,
+            kind: "cache"
+          };
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function saveCache(info) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            rate: info.rate,
+            source: info.source,
+            date: info.date,
+            savedAt: new Date().toISOString()
+          }));
+        } catch (e) {}
+      }
+
+      function parseBnr(text) {
+        if (!text || /<html/i.test(text)) return null;
+        var rateMatch = text.match(/currency="EUR"[^>]*>([0-9]+(?:[.,][0-9]+)?)/i) ||
+          text.match(/<Rate[^>]*currency="EUR"[^>]*>([0-9]+(?:[.,][0-9]+)?)/i);
+        if (!rateMatch) return null;
+        var rate = Number(String(rateMatch[1]).replace(",", "."));
+        if (!isFinite(rate) || rate <= 0) return null;
+        var dateMatch = text.match(/\bdate="([0-9]{4}-[0-9]{2}-[0-9]{2})"/);
+        return { rate: rate, source: "BNR", date: dateMatch ? dateMatch[1] : FALLBACK_DATE, kind: "live" };
+      }
+
+      function parseFrankfurter(text) {
+        var data = JSON.parse(text);
+        var rate = data && data.rates && Number(data.rates.RON);
+        if (!isFinite(rate) || rate <= 0) return null;
+        return { rate: rate, source: "Frankfurter", date: data.date || FALLBACK_DATE, kind: "live" };
+      }
+
+      function parseErApi(text) {
+        var data = JSON.parse(text);
+        var rate = data && data.rates && Number(data.rates.RON);
+        if (!isFinite(rate) || rate <= 0) return null;
+        var date = data.time_last_update_utc || data.date || FALLBACK_DATE;
+        return { rate: rate, source: "open.er-api.com", date: date, kind: "live" };
+      }
+
+      function parseJsdelivr(text) {
+        var data = JSON.parse(text);
+        var rate = data && data.eur && Number(data.eur.ron);
+        if (!isFinite(rate) || rate <= 0) return null;
+        return { rate: rate, source: "jsDelivr", date: data.date || FALLBACK_DATE, kind: "live" };
+      }
+
+      function loadEurRate() {
+        var cached = readCache();
+        applyRate(cached || {
+          rate: FALLBACK_RATE,
+          source: FALLBACK_SOURCE,
+          date: FALLBACK_DATE,
+          kind: "fallback"
+        });
+
+        var sources = [
+          { name: "BNR", url: "https://www.bnr.ro/nbrfxrates.xml", parse: parseBnr },
+          { name: "Frankfurter", url: "https://api.frankfurter.app/latest?from=EUR&to=RON", parse: parseFrankfurter },
+          { name: "open.er-api.com", url: "https://open.er-api.com/v6/latest/EUR", parse: parseErApi },
+          { name: "jsDelivr", url: "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json", parse: parseJsdelivr }
+        ];
+
+        (function next(i) {
+          if (i >= sources.length) return;
+          fetch(sources[i].url)
+            .then(function (res) {
+              if (!res.ok) throw new Error("status " + res.status);
+              return res.text();
+            })
+            .then(function (text) {
+              var parsed = sources[i].parse(text);
+              if (!parsed) throw new Error("parse");
+              applyRate(parsed);
+              saveCache(parsed);
+            })
+            .catch(function () {
+              next(i + 1);
+            });
+        })(0);
+      }
+
+      ["input", "change"].forEach(function (evt) {
+        [elImport, elP1, elP2, elP3].forEach(function (el) {
+          el.addEventListener(evt, render);
+        });
+      });
+
+      btnDa.addEventListener("click", function () { setVat(true); });
+      btnNu.addEventListener("click", function () { setVat(false); });
+      document.getElementById("btnExample").addEventListener("click", showExample);
+      document.getElementById("btnClear").addEventListener("click", clearAll);
+
+      window.TWBCalculator = {
+        calculate: calculate,
+        formatLei: formatLei,
+        formatPct: formatPct,
+        formatRate: formatRate,
+        parseLei: parseLei,
+        getRate: function () { return eurRate; },
+        getSettings: function () { return currentSettings(); },
+        setVat: setVat,
+        isVat: function () { return vatPayer; },
+        applyRate: applyRate,
+        FALLBACK_RATE: FALLBACK_RATE,
+        DEFAULTS: DEFAULTS,
+        THRESHOLDS: THRESHOLDS,
+        TVA_ADS: TVA_ADS,
+        autoPacking: autoPacking
+      };
+
+      renderFixed();
+      loadEurRate();
+    })();
+  </script>
+</body>
+</html>
